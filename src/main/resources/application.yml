@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: scriptutils
+  banner:
+    location: classpath:/banner.txt
+  config:
+    additional-location: file:./scriptutils.properties
+    import: optional:file:./scriptutils.properties
+server:
+  port: 8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  endpoint:
+    health:
+      show-details: always
