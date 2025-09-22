@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/HyScript7/ScriptUtils/Main/banner.png" alt="ScriptUtils">
+  <img src="banner.png" alt="ScriptUtils">
 </h1>
 
 <p align="center">
