@@ -1,4 +1,4 @@
-package io.github.hyscript7.scriptutils;
+package io.github.hyscript7.scriptutils.infrastructure.discord.startup;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,23 +6,27 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.github.hyscript7.scriptutils.infrastructure.discord.CommandRegistry;
 import jakarta.annotation.Nonnull;
 
 import org.springframework.stereotype.Component;
 
-import io.github.hyscript7.scriptutils.infrastructure.discord.CommandRegistry;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
+/**
+ * This event listener exists for the sole purpose of sending discord our slash commands if they're out of sync.
+ * This should run exactly once per startup.
+ */
 @Component
 @Slf4j
-public class CommandSync extends ListenerAdapter {
+public class SlashCommandRegistrator extends ListenerAdapter {
     private CommandRegistry commandRegistry;
 
-    public CommandSync(CommandRegistry commandRegistry) {
+    public SlashCommandRegistrator(CommandRegistry commandRegistry) {
         this.commandRegistry = commandRegistry;
     }
 
