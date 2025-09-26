@@ -16,9 +16,9 @@ public class SlashCommandContext implements CommandContext {
     private final SlashCommandInteractionEvent event;
     private final Map<String, Object> options;
 
-    long authorId;
-    long channelId;
-    Optional<Long> guildId;
+    private long authorId;
+    private long channelId;
+    private Optional<Long> guildId;
 
     @Override
     public boolean isAcknowledged() {
@@ -27,7 +27,7 @@ public class SlashCommandContext implements CommandContext {
 
     @Override
     public Optional<Long> getGuildId() {
-        throw new UnsupportedOperationException("Unimplemented method 'getGuildId'");
+        return guildId;
     }
 
     @Override
