@@ -28,7 +28,7 @@ public class CommandRegistry {
         this.rootCommands = new ArrayList<>();
     }
 
-    Optional<ExecutableCommand> getCommand(String name) {
+    public Optional<ExecutableCommand> getCommand(String name) {
         return Optional.ofNullable(commands.get(name));
     }
 
