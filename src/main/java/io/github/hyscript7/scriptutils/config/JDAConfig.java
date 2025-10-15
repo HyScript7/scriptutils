@@ -6,25 +6,41 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import io.github.hyscript7.scriptutils.infrastructure.discord.CommandHandler;
+import io.github.hyscript7.scriptutils.infrastructure.discord.CommandRegistry;
+import io.github.hyscript7.scriptutils.infrastructure.discord.ModuleRegistrar;
+import io.github.hyscript7.scriptutils.infrastructure.discord.startup.SlashCommandRegistrar;
+import io.github.hyscript7.scriptutils.domain.discord.Module;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 @Slf4j
 @Configuration
 public class JDAConfig {
+
+    private final SlashCommandRegistrar slashCommandRegistrar;
+
+    private final CommandHandler commandHandler;
+
+    private final CommandRegistry commandRegistry;
+
+    private final ModuleRegistrar moduleRegistrar;
     private final ScriptUtilsConfig scriptUtilsConfiguration;
-    private final ListenerAdapter[] listeners;
+    private final Module[] modules;
     private JDA jda;
 
-    public JDAConfig(ScriptUtilsConfig scriptUtilsConfiguration, ListenerAdapter[] listeners) {
-        this.listeners = listeners;
+    public JDAConfig(ScriptUtilsConfig scriptUtilsConfiguration, Module[] modules, ModuleRegistrar moduleRegistrar,
+            CommandRegistry commandRegistry, CommandHandler commandHandler, SlashCommandRegistrar slashCommandRegistrar) {
+        this.modules = modules;
         this.scriptUtilsConfiguration = scriptUtilsConfiguration;
+        this.moduleRegistrar = moduleRegistrar;
+        this.commandRegistry = commandRegistry;
+        this.commandHandler = commandHandler;
+        this.slashCommandRegistrar = slashCommandRegistrar;
     }
 
     @Bean
@@ -33,7 +49,8 @@ public class JDAConfig {
                 .createDefault(scriptUtilsConfiguration.token())
                 .setActivity(Activity.listening("to your demands."))
                 .enableIntents(EnumSet.allOf(GatewayIntent.class));
-        Arrays.stream(listeners).forEach(jdaBuilder::addEventListeners);
+        jdaBuilder.addEventListeners(commandHandler, slashCommandRegistrar);
+        Arrays.stream(modules).forEach(m -> moduleRegistrar.register(jdaBuilder, commandRegistry, m));
         return jdaBuilder;
     }
 
