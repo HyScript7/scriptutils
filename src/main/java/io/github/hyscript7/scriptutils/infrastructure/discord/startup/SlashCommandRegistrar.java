@@ -23,10 +23,10 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
  */
 @Component
 @Slf4j
-public class SlashCommandRegistrator extends ListenerAdapter {
+public class SlashCommandRegistrar extends ListenerAdapter {
     private CommandRegistry commandRegistry;
 
-    public SlashCommandRegistrator(CommandRegistry commandRegistry) {
+    public SlashCommandRegistrar(CommandRegistry commandRegistry) {
         this.commandRegistry = commandRegistry;
     }
 
