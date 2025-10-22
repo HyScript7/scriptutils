@@ -11,6 +11,7 @@ import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.Note
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteEditCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteListCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteSubcommandGroup;
+import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteViewCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.TimeoutCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.WarnAddCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.WarnListCommand;
@@ -82,13 +83,19 @@ public class ModerationConfiguration {
     }
 
     @Bean
+    NoteViewCommand noteViewCommand(NoteService noteService) {
+        return new NoteViewCommand(noteService);
+    }
+
+    @Bean
     NoteSubcommandGroup noteSubcommandGroup(NoteAddCommand noteAddCommand, NoteDeleteCommand noteDeleteCommand,
-            NoteEditCommand noteEditCommand, NoteListCommand noteListCommand) {
+            NoteEditCommand noteEditCommand, NoteListCommand noteListCommand, NoteViewCommand noteViewCommand) {
         NoteSubcommandGroup commandGroup = new NoteSubcommandGroup();
         commandGroup.addSubcommand(noteAddCommand);
         commandGroup.addSubcommand(noteDeleteCommand);
         commandGroup.addSubcommand(noteEditCommand);
         commandGroup.addSubcommand(noteListCommand);
+        commandGroup.addSubcommand(noteViewCommand);
         return commandGroup;
     }
 
