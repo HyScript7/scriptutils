@@ -71,7 +71,7 @@ public class NoteViewCommand extends Subcommand {
         }
 
         StringBuilder builder = new StringBuilder();
-        builder.append("#" + note.getId() + " last modified by " + note.getModeratorId() + ", added on <t:"
+        builder.append("#" + note.getId() + " last modified by <@" + note.getModeratorId() + ">, added on <t:"
                 + note.getCreatedAt().toEpochSecond(ZoneOffset.UTC) + ":f> and last edited <t:"
                 + note.getUpdatedAt().toEpochSecond(ZoneOffset.UTC) + ":R>");
         builder.append("\n```\n");
