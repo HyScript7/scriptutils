@@ -5,6 +5,8 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import io.github.hyscript7.scriptutils.domain.discord.commands.CommandContext;
 import io.github.hyscript7.scriptutils.domain.discord.commands.CommandMeta;
 import io.github.hyscript7.scriptutils.domain.discord.commands.GuildContext;
@@ -14,6 +16,7 @@ import io.github.hyscript7.scriptutils.infrastructure.Constants;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 
+@Component
 public class TimeoutCommand extends Subcommand {
 
     public TimeoutCommand() {
