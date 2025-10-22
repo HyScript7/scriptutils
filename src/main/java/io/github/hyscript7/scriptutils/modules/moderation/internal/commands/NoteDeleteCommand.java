@@ -21,7 +21,7 @@ public class NoteDeleteCommand extends Subcommand {
     private final NoteService noteService;
 
     public NoteDeleteCommand(NoteService noteService) {
-        super(new CommandMeta("edit", "Edits an existing note on a member.", List.of(
+        super(new CommandMeta("delete", "Deletes a note from a member.", List.of(
                 new OptionMeta("member", "The member to remove a note from.", OptionMeta.Type.USER, true),
                 new OptionMeta("noteid", "The ID of the note to remove", OptionMeta.Type.INTEGER, true))));
         this.noteService = noteService;
