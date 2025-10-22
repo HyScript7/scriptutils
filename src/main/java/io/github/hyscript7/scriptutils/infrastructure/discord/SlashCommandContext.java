@@ -4,13 +4,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.github.hyscript7.scriptutils.domain.discord.commands.CommandContext;
-import lombok.AllArgsConstructor;
+import io.github.hyscript7.scriptutils.domain.discord.commands.GuildContext;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 @Getter
-@AllArgsConstructor
 @Slf4j
 public class SlashCommandContext implements CommandContext {
     private final SlashCommandInteractionEvent event;
@@ -19,6 +18,19 @@ public class SlashCommandContext implements CommandContext {
     private long authorId;
     private long channelId;
     private Optional<Long> guildId;
+    private Optional<GuildContext> guildContext;
+
+    public SlashCommandContext(SlashCommandInteractionEvent event, Map<String, Object> options, long authorId,
+            long channelId, Optional<Long> guildId) {
+        this.event = event;
+        this.options = options;
+        this.authorId = authorId;
+        this.channelId = channelId;
+        this.guildId = guildId;
+        if (guildId.isPresent()) {
+            guildContext = Optional.of(new SlashGuildContext(event.getJDA(), guildId.get()));
+        }
+    }
 
     @Override
     public boolean isAcknowledged() {
@@ -31,8 +43,12 @@ public class SlashCommandContext implements CommandContext {
     }
 
     @Override
+    public void defer(boolean ephemeral) {
+        event.deferReply(ephemeral).queue();
+    }
+
+    @Override
     public void send(String message) {
-        log.info("Sending message: {} (acknowledged: {})", message, event.isAcknowledged());
         if (event.isAcknowledged()) {
             event.getHook().sendMessage(message).queue();
         } else {
@@ -50,11 +66,15 @@ public class SlashCommandContext implements CommandContext {
 
     @Override
     public void send(String message, boolean ephemeral) {
-        log.info("Sending message with ephemeral param set to {}: {} (acknowledged: {})", ephemeral, message, event.isAcknowledged());
         if (event.isAcknowledged()) {
             send(message);
         } else {
             event.reply(message).setEphemeral(ephemeral).queue();
         }
+    }
+
+    @Override
+    public Optional<GuildContext> getGuild() {
+        return guildContext;
     }
 }
