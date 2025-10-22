@@ -24,7 +24,6 @@ public class CommandHandler extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         log.info("Received slash command interaction: {}", event.getFullCommandName());
-        // When I wrote this, I and God knew what was going on... now only God does
         commandRegistry.getCommand(event.getFullCommandName())
                 .ifPresentOrElse(
                         command -> command
