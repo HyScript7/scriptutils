@@ -1,5 +1,6 @@
 package io.github.hyscript7.scriptutils.modules.moderation.internal.commands;
 
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,15 +17,14 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 
 @Component
-public class NoteEditCommand extends Subcommand {
+public class NoteViewCommand extends Subcommand {
 
     private final NoteService noteService;
 
-    public NoteEditCommand(NoteService noteService) {
-        super(new CommandMeta("edit", "Edits an existing note on a member.", List.of(
-                new OptionMeta("member", "The member to modify a note on.", OptionMeta.Type.USER, true),
-                new OptionMeta("note", "New note content", OptionMeta.Type.STRING, true),
-                new OptionMeta("noteid", "The ID of the note to edit", OptionMeta.Type.INTEGER, true))));
+    public NoteViewCommand(NoteService noteService) {
+        super(new CommandMeta("view", "Shows the content of a note for a specific member.", List.of(
+                new OptionMeta("member", "The member to remove a note from.", OptionMeta.Type.USER, true),
+                new OptionMeta("noteid", "The ID of the note to remove", OptionMeta.Type.INTEGER, true))));
         this.noteService = noteService;
     }
 
@@ -46,7 +46,6 @@ public class NoteEditCommand extends Subcommand {
         }
 
         User user = (User) context.getOption("member");
-        String noteContent = (String) context.getOption("note");
         long noteId = (Long) context.getOption("noteid");
 
         Optional<Note> noteOptional = noteService.getNoteById(noteId);
@@ -71,11 +70,15 @@ public class NoteEditCommand extends Subcommand {
             return;
         }
 
-        note.setContent(noteContent);
-        note.setModeratorId(context.getAuthorId());
+        StringBuilder builder = new StringBuilder();
+        builder.append("#" + note.getId() + " last modified by " + note.getModeratorId() + ", added on <t:"
+                + note.getCreatedAt().toEpochSecond(ZoneOffset.UTC) + ":f> and last edited <t:"
+                + note.getUpdatedAt().toEpochSecond(ZoneOffset.UTC) + ":R>");
+        builder.append("\n```\n");
+        builder.append(note.getContent());
+        builder.append("\n```");
 
-        noteService.updateNote(note);
-        context.send("Successfully updated note for " + user.getAsMention(), true);
+        context.send(builder.toString(), true);
     }
 
 }
