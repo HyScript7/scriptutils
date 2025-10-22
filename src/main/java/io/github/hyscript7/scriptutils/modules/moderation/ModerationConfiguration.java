@@ -6,11 +6,17 @@ import org.springframework.context.annotation.Configuration;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.BanCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.KickCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.ModerationCommandGroup;
+import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteAddCommand;
+import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteDeleteCommand;
+import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteEditCommand;
+import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteListCommand;
+import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteSubcommandGroup;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.TimeoutCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.WarnAddCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.WarnListCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.WarnRevokeCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.WarnSubcommandGroup;
+import io.github.hyscript7.scriptutils.modules.moderation.internal.services.NoteService;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.services.WarningService;
 
 @Configuration
@@ -56,13 +62,46 @@ public class ModerationConfiguration {
     }
 
     @Bean
+    NoteAddCommand noteAddCommand(NoteService noteService) {
+        return new NoteAddCommand(noteService);
+    }
+
+    @Bean
+    NoteDeleteCommand noteDeleteCommand(NoteService noteService) {
+        return new NoteDeleteCommand(noteService);
+    }
+
+    @Bean
+    NoteEditCommand noteEditCommand(NoteService noteService) {
+        return new NoteEditCommand(noteService);
+    }
+
+    @Bean
+    NoteListCommand noteListCommand(NoteService noteService) {
+        return new NoteListCommand(noteService);
+    }
+
+    @Bean
+    NoteSubcommandGroup noteSubcommandGroup(NoteAddCommand noteAddCommand, NoteDeleteCommand noteDeleteCommand,
+            NoteEditCommand noteEditCommand, NoteListCommand noteListCommand) {
+        NoteSubcommandGroup commandGroup = new NoteSubcommandGroup();
+        commandGroup.addSubcommand(noteAddCommand);
+        commandGroup.addSubcommand(noteDeleteCommand);
+        commandGroup.addSubcommand(noteEditCommand);
+        commandGroup.addSubcommand(noteListCommand);
+        return commandGroup;
+    }
+
+    @Bean
     ModerationCommandGroup moderationCommandGroup(KickCommand kickCommand, BanCommand banCommand,
-            TimeoutCommand timeoutCommand, WarnSubcommandGroup warnSubcommandGroup) {
+            TimeoutCommand timeoutCommand, WarnSubcommandGroup warnSubcommandGroup,
+            NoteSubcommandGroup noteSubcommandGroup) {
         ModerationCommandGroup commandGroup = new ModerationCommandGroup();
         commandGroup.addSubcommand(kickCommand);
         commandGroup.addSubcommand(banCommand);
         commandGroup.addSubcommand(timeoutCommand);
         commandGroup.addSubcommandGroup(warnSubcommandGroup);
+        commandGroup.addSubcommandGroup(noteSubcommandGroup);
         return commandGroup;
     }
 
