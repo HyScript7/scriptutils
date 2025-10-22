@@ -32,8 +32,8 @@ public class WarningService {
         return warningRepository.findById(id);
     }
 
-    public void revokeWarning(long id) {
-        warningRepository.deleteById(id);
+    public void revokeWarning(Warning warning) {
+        warningRepository.delete(warning);
     }
 
 }

@@ -67,7 +67,7 @@ public class WarnRevokeCommand extends Subcommand {
             return;
         }
 
-        warningService.revokeWarning(warning.getId());
+        warningService.revokeWarning(warning);
         context.send("Successfully revoked warning `" + warning.getReason() + "`", true);
     }
 
