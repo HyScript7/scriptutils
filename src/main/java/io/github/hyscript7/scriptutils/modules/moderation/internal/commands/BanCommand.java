@@ -33,7 +33,7 @@ public class BanCommand extends Subcommand {
         }
         GuildContext guild = guildOptional.get();
 
-        if (!guild.memberHasPermission(context.getAuthorId(), Permission.KICK_MEMBERS.getRawValue())) {
+        if (!guild.memberHasPermission(context.getAuthorId(), Permission.BAN_MEMBERS.getRawValue())) {
             context.send("You do not have permission to use this command!", true);
             return;
         }

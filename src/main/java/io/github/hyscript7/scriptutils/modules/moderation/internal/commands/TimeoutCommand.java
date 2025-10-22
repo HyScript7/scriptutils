@@ -34,7 +34,8 @@ public class TimeoutCommand extends Subcommand {
         }
         GuildContext guild = guildOptional.get();
 
-        if (!guild.memberHasPermission(context.getAuthorId(), Permission.KICK_MEMBERS.getRawValue())) {
+        // The permission node for timeout is MODERATE_MEMBERS for some reason.
+        if (!guild.memberHasPermission(context.getAuthorId(), Permission.MODERATE_MEMBERS.getRawValue())) {
             context.send("You do not have permission to use this command!", true);
             return;
         }
