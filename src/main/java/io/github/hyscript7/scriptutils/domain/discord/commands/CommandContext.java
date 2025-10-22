@@ -47,11 +47,29 @@ public interface CommandContext {
     Optional<Long> getGuildId();
 
     /**
+     * Get the guild context.
+     * 
+     * @return The guild context if the command was ran in a guild, otherwise an empty Optional
+     */
+    Optional<GuildContext> getGuild();
+
+    /**
      * Checks if the command was acknowledged. (Deferred or replied to)
      * 
      * @return True if the command was acknowledged
      */
     boolean isAcknowledged();
+
+    /**
+     * Defer the reply to the command interaction for when an action might take longer than discord expects it to.
+     * 
+     * @param ephemeral True if the message should be ephemeral
+     */
+    void defer(boolean ephemeral);
+
+    default void defer() {
+        defer(false);
+    }
 
     /**
      * Sends a reply to the command interaction.

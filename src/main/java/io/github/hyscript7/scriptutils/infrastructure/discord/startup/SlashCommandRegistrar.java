@@ -40,7 +40,7 @@ public class SlashCommandRegistrar extends ListenerAdapter {
 
         if (outOfSyncCount > 0 || localCommands.size() != remoteCommands.size()) {
             log.info(
-                    "Remote has {} commands, local has {}. {} slash commands are out of sync. Updating Discord...",
+                    "Remote has {} commands, local has {}. That means {} slash commands are out of sync. Updating Discord...",
                     remoteCommands.size(), localCommands.size(), outOfSyncCount);
             jda.updateCommands()
                     .addCommands(localCommands)
