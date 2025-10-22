@@ -2,6 +2,7 @@ package io.github.hyscript7.scriptutils.modules.moderation.internal.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import io.github.hyscript7.scriptutils.modules.moderation.internal.repositories.WarningRepository;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,14 @@ public class WarningService {
 
     public List<Warning> getWarningsForUser(long guildId, long userId) {
         return warningRepository.findByGuildIdAndUserId(guildId, userId);
+    }
+
+    public Optional<Warning> getWarningById(long id) {
+        return warningRepository.findById(id);
+    }
+
+    public void revokeWarning(long id) {
+        warningRepository.deleteById(id);
     }
 
 }
