@@ -12,6 +12,8 @@ import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.Note
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteListCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteSubcommandGroup;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.NoteViewCommand;
+import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.PurgeAllCommand;
+import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.PurgeCommandGroup;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.TimeoutCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.WarnAddCommand;
 import io.github.hyscript7.scriptutils.modules.moderation.internal.commands.WarnListCommand;
@@ -113,9 +115,23 @@ public class ModerationConfiguration {
     }
 
     @Bean
-    ModerationModule moderationModule(ModerationCommandGroup moderationCommandGroup) {
+    PurgeAllCommand purgeAllCommand() {
+        return new PurgeAllCommand();
+    }
+
+    @Bean
+    PurgeCommandGroup purgeCommandGroup(PurgeAllCommand purgeAllCommand) {
+        PurgeCommandGroup commandGroup = new PurgeCommandGroup();
+        commandGroup.addSubcommand(purgeAllCommand);
+        return commandGroup;
+    }
+
+    @Bean
+    ModerationModule moderationModule(ModerationCommandGroup moderationCommandGroup,
+            PurgeCommandGroup purgeCommandGroup) {
         ModerationModule module = new ModerationModule();
         module.addCommand(moderationCommandGroup);
+        module.addCommand(purgeCommandGroup);
         return module;
     }
 }
