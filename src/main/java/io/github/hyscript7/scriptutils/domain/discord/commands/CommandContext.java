@@ -39,6 +39,13 @@ public interface CommandContext {
     long getChannelId();
 
     /**
+     * Get the channel context for the channel the command was run in.
+     * 
+     * @return The channel context
+     */
+    ChannelContext getChannel();
+
+    /**
      * Get the ID of the guild the command was run in.
      * If the command was ran in a DM context, this will return an empty Optional.
      * 

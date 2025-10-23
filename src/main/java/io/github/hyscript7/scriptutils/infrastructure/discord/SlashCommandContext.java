@@ -3,6 +3,7 @@ package io.github.hyscript7.scriptutils.infrastructure.discord;
 import java.util.Map;
 import java.util.Optional;
 
+import io.github.hyscript7.scriptutils.domain.discord.commands.ChannelContext;
 import io.github.hyscript7.scriptutils.domain.discord.commands.CommandContext;
 import io.github.hyscript7.scriptutils.domain.discord.commands.GuildContext;
 import lombok.Getter;
@@ -76,5 +77,10 @@ public class SlashCommandContext implements CommandContext {
     @Override
     public Optional<GuildContext> getGuild() {
         return guildContext;
+    }
+
+    @Override
+    public ChannelContext getChannel() {
+        return new SlashChannelContext(event.getChannel(), guildContext);
     }
 }
