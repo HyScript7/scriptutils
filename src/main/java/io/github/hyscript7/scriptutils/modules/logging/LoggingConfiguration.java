@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import io.github.hyscript7.scriptutils.modules.logging.api.services.DiscordLoggingService;
 import io.github.hyscript7.scriptutils.modules.logging.internal.listeners.MemberLoggingListener;
 import io.github.hyscript7.scriptutils.modules.logging.internal.listeners.ModerationLoggingListener;
+import io.github.hyscript7.scriptutils.modules.logging.internal.listeners.ServerLoggingListener;
 
 @Configuration
 public class LoggingConfiguration {
@@ -20,11 +21,17 @@ public class LoggingConfiguration {
     }
 
     @Bean
+    ServerLoggingListener serverLoggingListener(DiscordLoggingService discordLoggingService) {
+        return new ServerLoggingListener(discordLoggingService);
+    }
+
+    @Bean
     LoggingModule loggingModule(MemberLoggingListener memberLoggingListener,
-            ModerationLoggingListener moderationLoggingListener) {
+            ModerationLoggingListener moderationLoggingListener, ServerLoggingListener serverLoggingListener) {
         LoggingModule loggingModule = new LoggingModule();
         loggingModule.addEventListener(memberLoggingListener);
         loggingModule.addEventListener(moderationLoggingListener);
+        loggingModule.addEventListener(serverLoggingListener);
         return loggingModule;
     }
 

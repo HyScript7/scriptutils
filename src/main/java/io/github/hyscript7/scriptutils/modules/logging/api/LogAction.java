@@ -19,7 +19,20 @@ public enum LogAction {
     MEMBER_UNBANNED(LogCategory.MODERATION, "Member Unbanned", "Fired when a member is unbanned."),
     MEMBER_KICKED(LogCategory.MODERATION, "Member Kicked", "Fired when a member is kicked."),
     MEMBER_WARNED(LogCategory.MODERATION, "Member Warned", "Fired when a member is warned."),
-    MEMBER_NOTE_UPDATED(LogCategory.MODERATION, "Member Note Updated", "Fired when a note is updated or created."),;
+    MEMBER_NOTE_UPDATED(LogCategory.MODERATION, "Member Note Updated", "Fired when a note is updated or created."),
+    
+    GUILD_CHANNEL_CREATED(LogCategory.SERVER, "Guild Channel Created", "Fired when a channel is created."),
+    GUILD_CHANNEL_DELETED(LogCategory.SERVER, "Guild Channel Deleted", "Fired when a channel is deleted."),
+    GUILD_CHANNEL_UPDATED(LogCategory.SERVER, "Guild Channel Updated", "Fired when a channel is updated (name, position, permissions)."),
+    GUILD_ROLE_CREATED(LogCategory.SERVER, "Guild Role Created", "Fired when a role is created."),
+    GUILD_ROLE_DELETED(LogCategory.SERVER, "Guild Role Deleted", "Fired when a role is deleted."),
+    GUILD_ROLE_UPDATED(LogCategory.SERVER, "Guild Role Updated", "Fired when a role is updated (name, position, permissions)."),
+    GUILD_OWNERSHIP_TRANSFER(LogCategory.SERVER, "Guild Ownership Transfer", "Fired when the guild owner is transferred."),
+
+    VOICE_CHANNEL_JOINED(LogCategory.VOICE, "Voice Channel Joined", "Fired when a member joins a voice channel."),
+    VOICE_CHANNEL_LEFT(LogCategory.VOICE, "Voice Channel Left", "Fired when a member leaves a voice channel."),
+    VOICE_CHANNEL_SWITCHED(LogCategory.VOICE, "Voice Channel Switched", "Fired when a member switches voice channels."),
+    ;
 
     private final LogCategory category;
     private final String name;
