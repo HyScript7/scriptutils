@@ -7,6 +7,7 @@ import io.github.hyscript7.scriptutils.modules.logging.api.services.DiscordLoggi
 import io.github.hyscript7.scriptutils.modules.logging.internal.listeners.MemberLoggingListener;
 import io.github.hyscript7.scriptutils.modules.logging.internal.listeners.ModerationLoggingListener;
 import io.github.hyscript7.scriptutils.modules.logging.internal.listeners.ServerLoggingListener;
+import io.github.hyscript7.scriptutils.modules.logging.internal.listeners.VoiceLoggingListener;
 
 @Configuration
 public class LoggingConfiguration {
@@ -26,12 +27,18 @@ public class LoggingConfiguration {
     }
 
     @Bean
+    VoiceLoggingListener voiceLoggingListener(DiscordLoggingService discordLoggingService) {
+        return new VoiceLoggingListener(discordLoggingService);
+    }
+
+    @Bean
     LoggingModule loggingModule(MemberLoggingListener memberLoggingListener,
-            ModerationLoggingListener moderationLoggingListener, ServerLoggingListener serverLoggingListener) {
+            ModerationLoggingListener moderationLoggingListener, ServerLoggingListener serverLoggingListener, VoiceLoggingListener voiceLoggingListener) {
         LoggingModule loggingModule = new LoggingModule();
         loggingModule.addEventListener(memberLoggingListener);
         loggingModule.addEventListener(moderationLoggingListener);
         loggingModule.addEventListener(serverLoggingListener);
+        loggingModule.addEventListener(voiceLoggingListener);
         return loggingModule;
     }
 
