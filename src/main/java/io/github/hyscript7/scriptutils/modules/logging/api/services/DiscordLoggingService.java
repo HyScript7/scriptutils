@@ -1,29 +1,27 @@
 package io.github.hyscript7.scriptutils.modules.logging.api.services;
 
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import io.github.hyscript7.scriptutils.modules.logging.api.LogEntry;
 import io.github.hyscript7.scriptutils.modules.logging.api.LogCategory;
-import io.github.hyscript7.scriptutils.modules.logging.internal.models.ServerSettings;
-import io.github.hyscript7.scriptutils.modules.logging.internal.services.ServerSettingsService;
-import net.dv8tion.jda.api.EmbedBuilder;
+import io.github.hyscript7.scriptutils.modules.logging.internal.models.GuildLoggingSettings;
+import io.github.hyscript7.scriptutils.modules.logging.internal.services.GuildLoggingSettingsService;
 import net.dv8tion.jda.api.entities.IncomingWebhookClient;
 import net.dv8tion.jda.api.entities.WebhookClient;
 
 @Service
 public class DiscordLoggingService {
 
-    private final ServerSettingsService serverSettingsService;
+    private final GuildLoggingSettingsService guildLoggingSettingsService;
 
-    DiscordLoggingService(ServerSettingsService serverSettingsService) {
-        this.serverSettingsService = serverSettingsService;
+    DiscordLoggingService(GuildLoggingSettingsService guildLoggingSettingsService) {
+        this.guildLoggingSettingsService = guildLoggingSettingsService;
     }
 
     public void log(LogEntry action) {
-        ServerSettings settings = serverSettingsService.getSettingsForGuild(action.guildId());
+        GuildLoggingSettings settings = guildLoggingSettingsService.getSettingsForGuild(action.guildId());
         Optional<String> defaultWebhookUrl = Optional.ofNullable(settings.getDefaultWebhookUrl());
         Optional<String> webhookUrl = Optional.ofNullable(switch (action.category()) {
             case LogCategory.DEFAULT -> settings.getDefaultWebhookUrl();

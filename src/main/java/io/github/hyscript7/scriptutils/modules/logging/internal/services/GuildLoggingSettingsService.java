@@ -1,8 +1,8 @@
 package io.github.hyscript7.scriptutils.modules.logging.internal.services;
 
 import io.github.hyscript7.scriptutils.modules.logging.api.LogCategory;
-import io.github.hyscript7.scriptutils.modules.logging.internal.models.ServerSettings;
-import io.github.hyscript7.scriptutils.modules.logging.internal.repositories.ServerSettingsRepository;
+import io.github.hyscript7.scriptutils.modules.logging.internal.models.GuildLoggingSettings;
+import io.github.hyscript7.scriptutils.modules.logging.internal.repositories.GuildLoggingSettingsRepository;
 
 import java.util.Optional;
 
@@ -10,46 +10,46 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServerSettingsService {
-    private final ServerSettingsRepository serverSettingsRepository;
+public class GuildLoggingSettingsService {
+    private final GuildLoggingSettingsRepository guildLoggingSettingsRepository;
 
-    public ServerSettingsService(ServerSettingsRepository serverSettingsRepository) {
-        this.serverSettingsRepository = serverSettingsRepository;
+    public GuildLoggingSettingsService(GuildLoggingSettingsRepository guildLoggingSettingsRepository) {
+        this.guildLoggingSettingsRepository = guildLoggingSettingsRepository;
     }
 
     /**
      * Gets the server settings for a given guild context.
-     * If the settings does not exist, creates a default settings for the guild.
+     * If the settings do not exist, creates a default settings for the guild.
      * 
-     * @param guildContext the guild context
+     * @param guildId the ID of the guild
      * @return the server settings for the guild
      */
-    public ServerSettings getSettingsForGuild(long guildId) {
-        return serverSettingsRepository.findByGuildId(guildId).orElseGet(
+    public GuildLoggingSettings getSettingsForGuild(long guildId) {
+        return guildLoggingSettingsRepository.findByGuildId(guildId).orElseGet(
                 () -> createDefaultSettingsForGuild(guildId));
     }
 
     /**
      * Creates a default server settings for a given guild context.
      * 
-     * @param guildContext the guild context
+     * @param guildId the ID of the guild
      * @return the default server settings for the guild
      */
-    public ServerSettings createDefaultSettingsForGuild(long guildId) {
-        ServerSettings settings = new ServerSettings();
+    public GuildLoggingSettings createDefaultSettingsForGuild(long guildId) {
+        GuildLoggingSettings settings = new GuildLoggingSettings();
         settings.setGuildId(guildId);
-        return serverSettingsRepository.save(settings);
+        return guildLoggingSettingsRepository.save(settings);
     }
 
     /**
      * Sets the webhook URL for a given guild context and log category.
      * 
-     * @param guildContext The guild context
+     * @param guildId The ID of the guild
      * @param category     The log category
      * @param url          The webhook URL
      */
     public void setWebhookUrl(long guildId, LogCategory category, @Nullable String url) {
-        ServerSettings settings = getSettingsForGuild(guildId);
+        GuildLoggingSettings settings = getSettingsForGuild(guildId);
         switch (category) {
             case LogCategory.MESSAGE -> settings.setMessageWebhookUrl(url);
             case LogCategory.MEMBER -> settings.setMemberWebhookUrl(url);
@@ -59,19 +59,19 @@ public class ServerSettingsService {
             case LogCategory.AUTO_MODERATION -> settings.setAutoModerationWebhookUrl(url);
             case LogCategory.DEFAULT -> settings.setDefaultWebhookUrl(url);
         }
-        serverSettingsRepository.save(settings);
+        guildLoggingSettingsRepository.save(settings);
     }
 
     /**
      * Gets the webhook URL for a given guild context and log category.
      * 
-     * @param guildContext the guild context
+     * @param guildId the ID of the guild
      * @param category     the log category
      * @return the webhook URL for the guild and log category, or an empty Optional
      *         if the webhook URL is not set.
      */
     public Optional<String> getWebhookUrl(long guildId, LogCategory category) {
-        ServerSettings settings = getSettingsForGuild(guildId);
+        GuildLoggingSettings settings = getSettingsForGuild(guildId);
         return Optional.ofNullable(switch (category) {
             case LogCategory.MESSAGE -> settings.getMessageWebhookUrl();
             case LogCategory.MEMBER -> settings.getMemberWebhookUrl();

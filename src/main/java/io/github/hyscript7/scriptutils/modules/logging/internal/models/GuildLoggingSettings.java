@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class ServerSettings {
+public class GuildLoggingSettings {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
