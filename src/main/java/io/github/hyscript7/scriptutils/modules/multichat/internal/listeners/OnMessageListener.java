@@ -12,11 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.IncomingWebhookClient;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.WebhookClient;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 
 @Component
 @Slf4j
@@ -84,7 +86,12 @@ public class OnMessageListener extends ListenerAdapter {
         embedBuilder.setDescription(message.content);
         embedBuilder.setFooter(message.sourceGuildName + " (" + message.sourceGuildId + ")",
                 message.sourceGuildIconUrl);
-        webhookClient.sendMessageEmbeds(embedBuilder.build()).queue();
+        WebhookMessageCreateAction<Message> action = webhookClient.sendMessageEmbeds(embedBuilder.build());
+        if (message.avatarUrl != null) {
+            action.setAvatarUrl(message.avatarUrl());
+        }
+        action.setUsername(message.username + " (ScriptUtils Multi-chat)");
+        action.queue();
     }
 
 }
