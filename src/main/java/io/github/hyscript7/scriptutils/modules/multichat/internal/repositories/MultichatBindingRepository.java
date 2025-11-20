@@ -10,4 +10,5 @@ import io.github.hyscript7.scriptutils.modules.multichat.internal.models.Multich
 public interface MultichatBindingRepository extends CrudRepository<MultichatBinding, Long> {
     Optional<MultichatBinding> findByChannelId(Long channelId);
     List<MultichatBinding> findByGuildId(Long guildId);
+    Optional<MultichatBinding> findByWebhookUrl(String webhookUrl);
 }
