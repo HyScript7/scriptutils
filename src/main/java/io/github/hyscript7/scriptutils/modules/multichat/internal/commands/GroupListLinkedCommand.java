@@ -1,6 +1,7 @@
 package io.github.hyscript7.scriptutils.modules.multichat.internal.commands;
 
 import io.github.hyscript7.scriptutils.modules.multichat.internal.models.MultichatBinding;
+import io.github.hyscript7.scriptutils.modules.multichat.internal.models.MultichatGroup;
 import io.github.hyscript7.scriptutils.modules.multichat.internal.services.GroupService;
 
 import java.util.List;
@@ -37,8 +38,11 @@ public class GroupListLinkedCommand extends Subcommand {
             context.send(stringBuilder.toString(), true);
             return;
         }
-        memberships.stream().map(MultichatBinding::getGroup).forEach(group -> stringBuilder.append("- ")
-                .append(group.getName()).append(" - ").append(group.getDescription()).append("\n"));
+        memberships.stream().forEach(binding -> {
+            MultichatGroup group = binding.getGroup();
+            stringBuilder.append("- <#").append(binding.getChannelId()).append("> <-> ")
+                    .append(group.getName()).append(" - ").append(group.getDescription()).append("\n");
+        });
         context.send(stringBuilder.toString().trim(), true);
     }
 
