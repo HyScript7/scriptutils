@@ -26,8 +26,10 @@ public class GroupListLinkedCommand extends Subcommand {
     @Override
     public void execute(CommandContext context) {
         Optional<GuildContext> guildContext = context.getGuild();
-        if (guildContext.isEmpty())
+        if (guildContext.isEmpty()) {
+            context.send("This command can only be used in a guild!", false);
             return;
+        }
         StringBuilder stringBuilder = new StringBuilder("Linked groups:\n");
         List<MultichatBinding> memberships = groupService.getSyncedChannelsByGuild(guildContext.get().getGuildId());
         if (memberships.isEmpty()) {
