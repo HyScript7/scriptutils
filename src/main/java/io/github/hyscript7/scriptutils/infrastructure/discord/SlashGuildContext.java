@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+import io.github.hyscript7.scriptutils.domain.discord.commands.ChannelContext;
 import io.github.hyscript7.scriptutils.domain.discord.commands.GuildContext;
 import io.github.hyscript7.scriptutils.infrastructure.Constants;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 
 @Slf4j
 public class SlashGuildContext implements GuildContext {
@@ -100,6 +102,16 @@ public class SlashGuildContext implements GuildContext {
     public boolean memberHasPermission(long userId, long permissions) {
         Member member = getMember(userId);
         return member.hasPermission(Permission.getPermissions(permissions));
+    }
+
+    @Override
+    public Optional<ChannelContext> getChannel(long channelId) {
+        Optional<GuildMessageChannel> channel = Optional
+                .ofNullable(guild.getChannelById(GuildMessageChannel.class, channelId));
+        if (channel.isPresent()) {
+            return Optional.of(new SlashChannelContext(channel.get(), Optional.of(this)));
+        }
+        return Optional.empty();
     }
 
 }
