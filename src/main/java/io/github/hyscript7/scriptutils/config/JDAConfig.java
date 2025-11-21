@@ -6,17 +6,19 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import io.github.hyscript7.scriptutils.domain.discord.Module;
 import io.github.hyscript7.scriptutils.infrastructure.discord.CommandHandler;
 import io.github.hyscript7.scriptutils.infrastructure.discord.CommandRegistry;
 import io.github.hyscript7.scriptutils.infrastructure.discord.ModuleRegistrar;
 import io.github.hyscript7.scriptutils.infrastructure.discord.startup.SlashCommandRegistrar;
-import io.github.hyscript7.scriptutils.domain.discord.Module;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 @Slf4j
 @Configuration
@@ -48,6 +50,7 @@ public class JDAConfig {
         JDABuilder jdaBuilder = JDABuilder
                 .createDefault(scriptUtilsConfiguration.token())
                 .setActivity(Activity.listening("to your demands."))
+                .setMemberCachePolicy(MemberCachePolicy.ALL) // Required for Role-Sync
                 .enableIntents(EnumSet.allOf(GatewayIntent.class));
         jdaBuilder.addEventListeners(commandHandler, slashCommandRegistrar);
         Arrays.stream(modules).forEach(m -> moduleRegistrar.register(jdaBuilder, commandRegistry, m));
