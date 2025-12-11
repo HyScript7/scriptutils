@@ -5,15 +5,21 @@ import java.util.List;
 import java.util.Optional;
 
 import io.github.hyscript7.scriptutils.domain.discord.commands.ChannelContext;
+import io.github.hyscript7.scriptutils.domain.discord.commands.ChannelType;
 import io.github.hyscript7.scriptutils.domain.discord.commands.GuildContext;
+import io.github.hyscript7.scriptutils.domain.discord.commands.RoleContext;
 import io.github.hyscript7.scriptutils.infrastructure.Constants;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import org.jetbrains.annotations.Nullable;
 
 @Slf4j
 public class SlashGuildContext implements GuildContext {
@@ -36,7 +42,7 @@ public class SlashGuildContext implements GuildContext {
         try {
             return Optional.of(jda.retrieveUserById(userId).complete());
         } catch (Exception e) {
-            log.error("Could not retrieve user " + userId + " due to an exception.", e);
+            log.error("Could not retrieve user {} due to an exception.", userId, e);
             return Optional.empty();
         }
     }
@@ -106,12 +112,56 @@ public class SlashGuildContext implements GuildContext {
 
     @Override
     public Optional<ChannelContext> getChannel(long channelId) {
-        Optional<GuildMessageChannel> channel = Optional
-                .ofNullable(guild.getChannelById(GuildMessageChannel.class, channelId));
-        if (channel.isPresent()) {
-            return Optional.of(new SlashChannelContext(channel.get(), Optional.of(this)));
+        Optional<GuildChannel> channel = Optional
+                .ofNullable(guild.getChannelById(GuildChannel.class, channelId));
+        return channel.map(guildChannel -> new SlashChannelContext(guildChannel, Optional.of(this)));
+    }
+
+    @Override
+    public ChannelContext createChannel(ChannelType channelType, String name, @Nullable Long categoryId) {
+        Category category;
+        if (categoryId == null) {
+            category = null;
+        } else {
+            category = guild.getCategoryById(categoryId);
         }
-        return Optional.empty();
+        GuildChannel channel = null;
+        switch (channelType) {
+            case TEXT -> {
+                channel = guild.createTextChannel(name, category).complete();
+            }
+            case FORUM ->  {
+                channel = guild.createForumChannel(name, category).complete();
+            }
+            case STAGE -> {
+                channel = guild.createStageChannel(name, category).complete();
+            }
+            case VOICE -> {
+                channel = guild.createVoiceChannel(name, category).complete();
+            }
+            case CATEGORY ->  {
+                channel = guild.createCategory(name).complete();
+            }
+        };
+        if (channel == null) {
+            throw new IllegalStateException("Could not create channel for channelType: " + channelType);
+        }
+        return new SlashChannelContext(channel, Optional.of(this));
+    }
+
+    @Override
+    public RoleContext createRole(String name, int color, boolean mentionable, boolean distinct, @Nullable Long positionedAfter) {
+        Role role = guild.createRole().setName(name).setColor(color).setMentionable(mentionable).setHoisted(distinct).complete();
+        if (positionedAfter != null) {
+            Role other = guild.getRoleById(positionedAfter);
+            if (other != null) {
+                guild.modifyRolePositions().selectPosition(role).moveAbove(other).complete();
+            } else {
+                // TODO: We're failing silently, let the user know somehow!
+                log.warn("Could not modify positions for role {}, as the other role {} does not exist.", role.getId(), positionedAfter);
+            }
+        }
+        return new SlashRoleContext(role, this);
     }
 
 }

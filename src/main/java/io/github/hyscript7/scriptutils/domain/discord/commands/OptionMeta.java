@@ -35,6 +35,8 @@ public class OptionMeta {
         this.description = description;
         this.type = type;
         this.required = required;
-        this.defaultValue = Optional.of(defaultValue);
+        // We have to use a container for the value, because nulls would otherwise cause the adapter to assume the option
+        // is missing and it would throw.
+        this.defaultValue = Optional.of(new DefaultOptionValue<>(defaultValue));
     }
 }

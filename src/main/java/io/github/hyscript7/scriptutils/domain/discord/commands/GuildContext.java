@@ -1,6 +1,10 @@
 package io.github.hyscript7.scriptutils.domain.discord.commands;
 
+import net.dv8tion.jda.api.entities.TeamMember;
+import org.jetbrains.annotations.Nullable;
+
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 
 public interface GuildContext {
@@ -86,7 +90,7 @@ public interface GuildContext {
      * Checks if a member has a permission on the server.
      * 
      * @param userId     the ID of the member
-     * @param permission the numeric value of the permissions to check
+     * @param permissions the numeric value of the permissions to check
      * @return true if the member has the permission
      */
     boolean memberHasPermission(long userId, long permissions);
@@ -99,4 +103,28 @@ public interface GuildContext {
      *         empty Optional
      */
     Optional<ChannelContext> getChannel(long channelId);
+
+    /**
+     * Creates a new channel on this guild and returns its context.
+     *
+     * @param channelType The type of channel to create
+     * @param name The name for the new channel
+     * @param categoryId The ID of the category to create the channel in (or null if none)
+     * @return The new channels context
+     */
+    ChannelContext createChannel(ChannelType channelType, String name, @Nullable Long categoryId);
+    // TODO: Replace categoryId with CategoryContext or smthing
+
+    /**
+     * Creates a new role on this guild and returns its context.
+     *
+     * @param name The name for the new role
+     * @param color The color of the new role
+     * @param mentionable Whether the new role should be mentionable by everyone (even without the mention @everyone permission)
+     * @param distinct Whether the role should show separately in the member list sidebar
+     * @param positionedAfter The ID of the role to position this role after (above) or null if default
+     * @return The new roles context
+     */
+    RoleContext createRole(String name, int color, boolean mentionable, boolean distinct, @Nullable Long positionedAfter);
+
 }
