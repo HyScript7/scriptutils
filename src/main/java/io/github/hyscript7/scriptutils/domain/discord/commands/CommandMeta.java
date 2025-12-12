@@ -31,4 +31,52 @@ public class CommandMeta {
     public void addOption(OptionMeta option) {
         options.add(option);
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String name;
+        private String description;
+        private final List<OptionMeta> options = new ArrayList<>();
+
+        private Builder() {
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder addOption(OptionMeta option) {
+            this.options.add(option);
+            return this;
+        }
+
+        public Builder addOption(String name, String description, OptionMeta.Type type, boolean required) {
+            this.options.add(new OptionMeta(name, description, type, required));
+            return this;
+        }
+
+        public Builder addOption(String name, String description, OptionMeta.Type type, boolean required, Object defaultValue) {
+            this.options.add(new OptionMeta(name, description, type, required, defaultValue));
+            return this;
+        }
+
+        public CommandMeta build() {
+            if (name == null || name.isEmpty()) {
+                throw new IllegalStateException("Command name cannot be null or empty");
+            }
+            if (description == null || description.isEmpty()) {
+                throw new IllegalStateException("Command description cannot be null or empty");
+            }
+            return new CommandMeta(name, description, new ArrayList<>(options));
+        }
+    }
 }

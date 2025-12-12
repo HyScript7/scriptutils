@@ -2,6 +2,7 @@ package io.github.hyscript7.scriptutils.infrastructure.discord;
 
 import java.util.Optional;
 
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import org.jetbrains.annotations.Nullable;
 
 import io.github.hyscript7.scriptutils.domain.discord.commands.ChannelContext;
@@ -100,11 +101,11 @@ public class SlashChannelContext implements ChannelContext {
 
     @Override
     public void delete() {
-        if (channel instanceof GuildMessageChannel gc) {
+        if (channel instanceof GuildChannel gc) {
             gc.delete().queue();
         } else {
             throw new UnsupportedOperationException(
-                    "Cannot set the topic of a channel of type " + channel.getType());
+                    "Cannot delete a channel of type " + channel.getType());
         }
     }
 

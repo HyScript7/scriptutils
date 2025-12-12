@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import io.github.hyscript7.scriptutils.domain.discord.commands.ChannelContext;
 import io.github.hyscript7.scriptutils.domain.discord.commands.CommandContext;
+import io.github.hyscript7.scriptutils.domain.discord.commands.DefaultOptionValue;
 import io.github.hyscript7.scriptutils.domain.discord.commands.GuildContext;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -60,8 +61,13 @@ public class SlashCommandContext implements CommandContext {
     @Override
     public Object getOption(String name) throws IllegalArgumentException {
         Object val = this.options.get(name);
-        if (val == null)
+        // Because of the VERY ugly way some code was written for handling null options,
+        // we have to return defaults like this...
+        if (val instanceof DefaultOptionValue<?> defaultOptionValue) {
+            return defaultOptionValue.getValue();
+        } else if (val == null) {
             throw new IllegalArgumentException("Option " + name + " not found");
+        }
         return val;
     }
 
