@@ -2,6 +2,7 @@ package io.github.hyscript7.scriptutils.infrastructure.discord;
 
 import java.util.Optional;
 
+import net.dv8tion.jda.api.entities.channel.attribute.IWebhookContainer;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import org.jetbrains.annotations.Nullable;
 
@@ -107,6 +108,16 @@ public class SlashChannelContext implements ChannelContext {
             throw new UnsupportedOperationException(
                     "Cannot delete a channel of type " + channel.getType());
         }
+    }
+
+    @Override
+    public String createWebhook(String name) {
+        if (!(channel instanceof IWebhookContainer wc)) {
+            throw new UnsupportedOperationException(
+                    "Cannot create a webhook on a channel of type " + channel.getType()
+            );
+        }
+        return wc.createWebhook(name).complete().getUrl();
     }
 
 }
