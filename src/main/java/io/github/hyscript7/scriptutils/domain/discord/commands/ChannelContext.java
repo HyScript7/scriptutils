@@ -75,4 +75,11 @@ public interface ChannelContext {
      * Deletes the channel.
      */
     void delete();
+
+    /**
+     * Creates a new webhook and returns its url
+     * @param name The name for the webhook
+     * @return The URL (token included)
+     */
+    String createWebhook(String name);
 }

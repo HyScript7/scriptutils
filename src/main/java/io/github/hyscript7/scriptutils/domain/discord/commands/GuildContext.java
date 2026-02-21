@@ -126,5 +126,4 @@ public interface GuildContext {
      * @return The new roles context
      */
     RoleContext createRole(String name, int color, boolean mentionable, boolean distinct, @Nullable Long positionedAfter);
-
 }
