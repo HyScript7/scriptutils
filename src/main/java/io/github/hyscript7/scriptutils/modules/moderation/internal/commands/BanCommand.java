@@ -43,7 +43,7 @@ public class BanCommand extends Subcommand {
 
         User user = (User) context.getOption("member");
         String reason = (String) context.getOption("reason");
-        int purgeDays = (Integer) context.getOption("purge");
+        long purgeDays = (Long) context.getOption("purge");
         Duration purgeDuration = Duration.ofDays(purgeDays);
         try {
             guild.ban(user.getIdLong(), purgeDuration, reason);
