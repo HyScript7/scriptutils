@@ -109,19 +109,34 @@ public class ServerLoggingListener extends ListenerAdapter {
                         embed.build()));
     }
 
+    /*
+    TODO: Fix SU-41
+    The fix would require keeping track of channel positions
+    and updating them when channels are moved to new positions
+    in our copy of the guild channel list, which of course is prone
+    to de-sync issues.
+    Currently, if a single channel moves, it inherently changes the positions of all channels below it,
+    causing embed spam.
+    With this theoretical new system, we'd prune the channels which didn't have their position changed
+    relative to surrounding channels.
+    Theoretically, we can also implement this with a sort of debounce system, where multiple sequential updates
+    will get grouped together in one message.
+
+    Previous Implementation:
     @Override
     public void onChannelUpdatePosition(ChannelUpdatePositionEvent event) {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Channel Moved");
-        embed.addField("Name", event.getChannel().getName(), true);
-        embed.addField("ID", event.getChannel().getId(), true);
-        embed.addField("Old Position", String.valueOf(event.getOldValue()), true);
-        embed.addField("New Position", String.valueOf(event.getNewValue()), true);
-        embed.setColor(Constants.Colors.YELLOW.getValue());
-        discordLoggingService
-                .log(new LogEntry(event.getJDA(), event.getGuild().getIdLong(), LogAction.GUILD_CHANNEL_UPDATED,
-                        embed.build()));
+       EmbedBuilder embed = new EmbedBuilder();
+       embed.setTitle("Channel Moved");
+       embed.addField("Name", event.getChannel().getName(), true);
+       embed.addField("ID", event.getChannel().getId(), true);
+       embed.addField("Old Position", String.valueOf(event.getOldValue()), true);
+       embed.addField("New Position", String.valueOf(event.getNewValue()), true);
+       embed.setColor(Constants.Colors.YELLOW.getValue());
+       discordLoggingService
+             .log(new LogEntry(event.getJDA(), event.getGuild().getIdLong(), LogAction.GUILD_CHANNEL_UPDATED,
+                     embed.build()));
     }
+    */
 
     @Override
     public void onChannelUpdateParent(ChannelUpdateParentEvent event) {
