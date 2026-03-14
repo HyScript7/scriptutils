@@ -18,6 +18,8 @@ public class PurgeAllCommand extends Subcommand {
         )));
     }
 
+    private static final int PURGE_LIMIT = 100;
+
     @Override
     public void execute(CommandContext context) {
         Optional<GuildContext> guildOptional = context.getGuild();
@@ -27,7 +29,6 @@ public class PurgeAllCommand extends Subcommand {
         }
         GuildContext guild = guildOptional.get();
 
-        // TODO: This permission might be deprecated soon on discord's side.
         boolean hasModPerms = guild.memberHasPermission(context.getAuthorId(),
                 Permission.MESSAGE_MANAGE.getRawValue());
 
@@ -38,10 +39,10 @@ public class PurgeAllCommand extends Subcommand {
 
         long messageCount = (Long) context.getOption("count");
 
-        boolean warnCapped = messageCount > 1000;
-        messageCount = Math.min(messageCount, 1000);
+        boolean warnCapped = messageCount > PURGE_LIMIT;
+        messageCount = Math.min(messageCount, PURGE_LIMIT);
 
-        context.send("Purging " + messageCount + " messages" + (warnCapped ? " (capped to 1000)" : "") + "...", true);
+        context.send("Purging " + messageCount + " messages" + (warnCapped ? " (capped to 100)" : "") + "...", true);
         context.getChannel().purgeMessages(messageCount);
     }
     

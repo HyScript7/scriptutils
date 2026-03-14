@@ -92,7 +92,12 @@ public class SlashChannelContext implements ChannelContext {
 
     @Override
     public void purgeMessages(long amount) {
+        if (amount > 100) {
+            throw new UnsupportedOperationException(
+                    "Cannot purge more than 100 messages at once");
+        } 
         if (channel instanceof StandardGuildMessageChannel gc) {
+            // amount limit 100 for REST call
             gc.getHistory().retrievePast(Math.toIntExact(amount)).onSuccess(gc::purgeMessages).queue();
         } else {
             throw new UnsupportedOperationException(
