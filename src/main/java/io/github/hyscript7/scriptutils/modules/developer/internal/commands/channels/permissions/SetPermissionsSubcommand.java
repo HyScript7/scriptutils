@@ -30,6 +30,12 @@ public class SetPermissionsSubcommand extends Subcommand {
         }
         guild = context.getGuild().get();
 
+        if(!guild.memberHasPermission(context.getAuthorId(),
+                Permission.MANAGE_CHANNEL.getRawValue())) {
+            context.send("You do not have permission to use this command!", true);
+            return;
+        }
+
         if (!(channel instanceof GuildChannel guildChannel)) {
             context.send("The specified channel is not a guild channel!", true);
             return;

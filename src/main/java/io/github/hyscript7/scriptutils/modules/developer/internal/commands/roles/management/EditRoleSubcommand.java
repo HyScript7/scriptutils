@@ -2,6 +2,7 @@ package io.github.hyscript7.scriptutils.modules.developer.internal.commands.role
 
 import io.github.hyscript7.scriptutils.domain.discord.commands.*;
 import io.github.hyscript7.scriptutils.modules.developer.internal.ColorUtil;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.managers.RoleManager;
 import org.jetbrains.annotations.Nullable;
@@ -25,8 +26,15 @@ public class EditRoleSubcommand extends Subcommand {
         @Nullable Boolean distinct = (Boolean) context.getOption("distinct");
         @Nullable Boolean mentionable = (Boolean) context.getOption("mentionable");
 
-        if (context.getGuild().isEmpty()) {
+        GuildContext guild = context.getGuild().orElse(null);
+        if (guild == null) {
             context.send("This command can only be ran in a guild!", true);
+            return;
+        }
+
+        if(!guild.memberHasPermission(context.getAuthorId(),
+                Permission.MANAGE_ROLES.getRawValue())) {
+            context.send("You do not have permission to use this command!", true);
             return;
         }
 

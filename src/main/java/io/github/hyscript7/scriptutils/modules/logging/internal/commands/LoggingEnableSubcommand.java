@@ -25,6 +25,11 @@ public class LoggingEnableSubcommand extends AbstractLoggingSubcommand {
         GuildContext guild = getValidatedGuild(context);
         if (guild == null) return;
 
+        if (!userHasPermissionsToManageLogging(context)) {
+            context.send("You do not have permission to use this command!", true);
+            return;
+        }
+
         LogCategory logCategory = getValidatedCategory(context);
         if (logCategory == null) return;
 

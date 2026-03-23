@@ -3,6 +3,7 @@ package io.github.hyscript7.scriptutils.modules.logging.internal.commands;
 import io.github.hyscript7.scriptutils.domain.discord.commands.*;
 import io.github.hyscript7.scriptutils.modules.logging.api.LogCategory;
 import io.github.hyscript7.scriptutils.modules.logging.internal.services.GuildLoggingSettingsService;
+import net.dv8tion.jda.api.Permission;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -43,5 +44,14 @@ public abstract class AbstractLoggingSubcommand extends Subcommand {
             context.send("You must be in a guild to use this command!", true);
             return null;
         });
+    }
+
+    protected boolean userHasPermissionsToManageLogging(CommandContext commandContext) {
+        GuildContext guild = commandContext.getGuild().orElse(null);
+        if (guild == null) {
+            return false;
+        }
+        return guild.memberHasPermission(commandContext.getAuthorId(),
+                Permission.MANAGE_SERVER.getRawValue());
     }
 }

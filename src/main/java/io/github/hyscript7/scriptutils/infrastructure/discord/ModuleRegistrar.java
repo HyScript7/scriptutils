@@ -39,6 +39,7 @@ public class ModuleRegistrar {
                         log.error("Failed to register event listener {} of module {}! {}",
                                 listener.getClass().getName(),
                                 module.getMeta().getName(), e.getMessage());
+                        throw e;
                     }
                 });
         log.info("Loaded {} event listeners from module {}.", module.getEventListeners().size(), module.getMeta().getName());

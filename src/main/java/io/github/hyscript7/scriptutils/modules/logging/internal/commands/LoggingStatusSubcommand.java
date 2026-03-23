@@ -21,6 +21,11 @@ public class LoggingStatusSubcommand extends AbstractLoggingSubcommand {
         GuildContext guild = getValidatedGuild(context);
         if (guild == null) return;
 
+        if (!userHasPermissionsToManageLogging(context)) {
+            context.send("You do not have permission to use this command!", true);
+            return;
+        }
+
         GuildLoggingSettings settings = guildLoggingSettingsService.getSettingsForGuild(guild.getGuildId());
 
         String sb = "# 📜 Logging Configuration\n" +

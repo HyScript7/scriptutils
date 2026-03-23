@@ -1,6 +1,7 @@
 package io.github.hyscript7.scriptutils.modules.developer.internal.commands.channels.management;
 
 import io.github.hyscript7.scriptutils.domain.discord.commands.*;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -35,6 +36,12 @@ public class MoveAllSubcommand extends Subcommand {
             return;
         }
         guild = context.getGuild().get();
+
+        if(!guild.memberHasPermission(context.getAuthorId(),
+                Permission.MANAGE_CHANNEL.getRawValue())) {
+            context.send("You do not have permission to use this command!", true);
+            return;
+        }
 
         if (sourceCategory == null && targetCategory == null) {
             context.send("You must specify at least one category! What are you even trying to do here? 🤨", true);

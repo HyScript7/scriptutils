@@ -1,6 +1,7 @@
 package io.github.hyscript7.scriptutils.modules.developer.internal.commands.roles.memberships;
 
 import io.github.hyscript7.scriptutils.domain.discord.commands.*;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 
@@ -19,12 +20,17 @@ public class AddAllMembersSubcommand extends Subcommand {
         Role roleToAdd = (Role) context.getOption("role");
         Role sourceRole = (Role) context.getOption("from");
 
-        GuildContext guild;
-        if (context.getGuild().isEmpty()) {
+        GuildContext guild = context.getGuild().orElse(null);
+        if (guild == null) {
             context.send("This command can only be ran in a guild!", true);
             return;
         }
-        guild = context.getGuild().get();
+
+        if(!guild.memberHasPermission(context.getAuthorId(),
+                Permission.MANAGE_ROLES.getRawValue())) {
+            context.send("You do not have permission to use this command!", true);
+            return;
+        }
 
         if (roleToAdd.getIdLong() == sourceRole.getIdLong()) {
             context.send("The role to add and the source role cannot be the same!", true);

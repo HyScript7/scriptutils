@@ -1,6 +1,7 @@
 package io.github.hyscript7.scriptutils.modules.developer.internal.commands.roles.management;
 
 import io.github.hyscript7.scriptutils.domain.discord.commands.*;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
 
 public class DeleteRoleSubcommand extends Subcommand {
@@ -20,6 +21,12 @@ public class DeleteRoleSubcommand extends Subcommand {
             return;
         }
         guild = context.getGuild().get();
+
+        if(!guild.memberHasPermission(context.getAuthorId(),
+                Permission.MANAGE_ROLES.getRawValue())) {
+            context.send("You do not have permission to use this command!", true);
+            return;
+        }
 
         context.defer(true);
 

@@ -1,6 +1,7 @@
 package io.github.hyscript7.scriptutils.modules.developer.internal.commands.roles.memberships;
 
 import io.github.hyscript7.scriptutils.domain.discord.commands.*;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.UserSnowflake;
@@ -18,12 +19,17 @@ public class RemoveMemberSubcommand extends Subcommand {
         Role role = (Role) context.getOption("role");
         User user = (User) context.getOption("member");
 
-        GuildContext guild;
-        if (context.getGuild().isEmpty()) {
+        GuildContext guild = context.getGuild().orElse(null);
+        if (guild == null) {
             context.send("This command can only be ran in a guild!", true);
             return;
         }
-        guild = context.getGuild().get();
+
+        if(!guild.memberHasPermission(context.getAuthorId(),
+                Permission.MANAGE_ROLES.getRawValue())) {
+            context.send("You do not have permission to use this command!", true);
+            return;
+        }
 
         context.defer(true);
 

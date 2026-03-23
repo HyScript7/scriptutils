@@ -1,6 +1,7 @@
 package io.github.hyscript7.scriptutils.modules.developer.internal.commands.channels.management;
 
 import io.github.hyscript7.scriptutils.domain.discord.commands.*;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +26,12 @@ public class EditChannelSubcommand extends Subcommand {
             return;
         }
         guild = context.getGuild().get();
+
+        if(!guild.memberHasPermission(context.getAuthorId(),
+                Permission.MANAGE_CHANNEL.getRawValue())) {
+            context.send("You do not have permission to use this command!", true);
+            return;
+        }
 
         if (newName == null && newTopic == null) {
             context.send("You must specify at least one property to edit (name or topic)!", true);

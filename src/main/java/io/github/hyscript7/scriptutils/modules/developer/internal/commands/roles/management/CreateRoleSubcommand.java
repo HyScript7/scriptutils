@@ -2,6 +2,7 @@ package io.github.hyscript7.scriptutils.modules.developer.internal.commands.role
 
 import io.github.hyscript7.scriptutils.domain.discord.commands.*;
 import io.github.hyscript7.scriptutils.modules.developer.internal.ColorUtil;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +31,12 @@ public class CreateRoleSubcommand extends Subcommand {
             return;
         }
         guild = context.getGuild().get();
+
+        if(!guild.memberHasPermission(context.getAuthorId(),
+                Permission.MANAGE_ROLES.getRawValue())) {
+            context.send("You do not have permission to use this command!", true);
+            return;
+        }
 
         Integer color = ColorUtil.parseColor(colorString);
 
