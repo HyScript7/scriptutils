@@ -21,6 +21,16 @@ It provides many niche features like role-sync and channel-sync while also maint
 
 A distinguishing feature would be the developer module, which lets you create whole servers by copy pasting a bundle of commands which create or modify channels, roles or members.
 
+## Building
+
+To build the project, simply run the following command:
+
+```sh
+./gradlew bootJar
+```
+
+The compiled jar file will be under `build/libs/`
+
 ## License
 
 This project is licensed under the **BSD 3-Clause License**.
